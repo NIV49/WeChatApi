@@ -73,3 +73,7 @@ ws.run_forever()
 2. 简化json数据
 3. 新增接收消息附带WeChatID标识符，多开更容易识别消息来源微信
 4. 登录设置禁止更新，避免新版本自动更新
+
+# 交流
+微信群：
+<img src="https://cdn.jsdelivr.net/gh/frz2one/wechatapi/jpg.jpg" alt="jpg.jpp" style="zoom:50%;" />
