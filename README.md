@@ -76,4 +76,4 @@ ws.run_forever()
 
 # 交流
 添加微信进群：
-<img src="https://cdn.jsdelivr.net/gh/frz2one/wechatapi/jpg.jpg" alt="jpg.jpp" style="zoom:50%;" />
+<img src="https://cdn.jsdelivr.net/gh/frz2one/wechatapi/qrcode.jpg" alt="jpg.jpp" style="zoom:50%;" />
