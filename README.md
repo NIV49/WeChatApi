@@ -75,5 +75,5 @@ ws.run_forever()
 4. 登录设置禁止更新，避免新版本自动更新
 
 # 交流
-微信群：
+添加微信进群：
 <img src="https://cdn.jsdelivr.net/gh/frz2one/wechatapi/jpg.jpg" alt="jpg.jpp" style="zoom:50%;" />
