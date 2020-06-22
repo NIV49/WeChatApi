@@ -6,44 +6,66 @@ Api程序入群自取，现免费。
 
 ### Python
 
-> websocket连接服务端，把接收到的消息以文本的方式转发到微信消息助手
+> 自动同意好友并且回复内容，关键词拉人进群demo
 
 ```python
 import requests
 import  json
 #import qrcode
 import random
+import threading
 import time
-
 import websocket
 # -*- coding: utf-8 -*-
 
-foo = ['filehelper']
+x="""回复12300邀请进狗子微信Api交流群"""#同意好友回复内容
+dict0={"12300":"12312312388@chatroom"}#关键词邀请字典
+#初始化
 url = "http://127.0.0.1:2222/"
 header = {"Content-Type": "application/json"}
-body_1 = {"funid": 1, "key": "初始化填写的你key"}
+body_1 = {"funid": 1, "key": "填写的你key"}
 body_1 = str(body_1)
 body_1 = bytes(body_1, encoding="utf-8")
 response_1 = requests.post(url, data=body_1, headers=header)
 print(response_1.text)
-def Merge(dict1, dict2):
-    return(dict2.update(dict1))
-def WeChatPost(funid,adddict={},WeChatID=0,type=0,wxid="",centent=""):
-    Merge({"funid": funid, "WeChatID": WeChatID, "wxid": wxid, "content": centent, "type": type}, adddict)
+#接口
+def WeChatPost(dict):
     url = "http://127.0.0.1:2222/"
     header = {"Content-Type": "application/json"}
-    body_1 =adddict
+    body_1 =dict
     body_1 = str(body_1)
     body_1 = bytes(body_1, encoding="utf-8")
     response_1 = requests.post(url, data=body_1, headers=header)
     return response_1.content.decode('utf-8')
     pass
+def Agreed(message):
+    message0=message["content"]
+    print(message0)
+    WeChatPost({"funid": 51, "WeChatID": message["WeChatID"], "v1": message0[message0.find("encryptusername=") + 17:message0.find("fromnickname") - 2],"v4": message0[message0.find("ticket=") + 8:message0.find("opcode=") - 2]})
+    time.sleep(2)
+    WeChatPost({"funid":20,"WeChatID":message["WeChatID"],"wxid":message0[message0.find("fromusername") + 14:message0.find("fromusername") + 33],"content":x}) #发送同意好友回复
+    pass
+def msg(message):
+    if message["wxid"].find("wxid") != -1 :
+        for (key, value) in dict0.items():
+            if key==message["content"] :
+                WeChatPost({"funid": 32, "WeChatID": message["WeChatID"], "wxid": value,"wxidlist": [message["wxid"]]})
+                pass
+            pass
+        pass
+    pass
 
-
-def on_message(ws, message):
+#Websocket回调和连接
+def on_message(ws, message): #处理逻辑
     message_0 = json.loads(message)
-    print(message_0["WeChatID"])
-    WeChatPost(20,WeChatID=message_0["WeChatID"],type=5,centent=message_0["content"],wxid=random.choice(foo))
+    if message_0["type"]==1:
+        threading.Thread(target=msg, args=(message_0,)).start()  # 线程执行消息处理函数
+
+    if message_0["type"]==37: #好友申请
+        print("好友申请")
+        threading.Thread(target=Agreed, args=(message_0,)).start() #线程执行同意好友并回复消息函数
+        pass
+
 def on_error(ws, error):
     print(ws)
     print(error)
@@ -53,16 +75,6 @@ def on_close(ws):
 websocket.enableTrace(True)
 ws = websocket.WebSocketApp("ws://127.0.0.1:2222/",on_message=on_message,on_error=on_error,on_close=on_close)
 ws.run_forever()
-
-# 二维码内容
-#data = "https://www.baidu.com"
-# 生成二维码
-#img = qrcode.make(data=data)
-# 直接显示二维码
-#img.show()
-# 保存二维码为文件
-# img.save("baidu.jpg")
-
 ```
 
 ## 更新日志
